@@ -1,0 +1,50 @@
+{layout name="public/layout"/}
+ <h3 class="text-center text-success">分类管理</h3>
+ <table class="table table-default table-hover text-center">
+ 	
+ 	<tr>
+ 		<td>编号</td>
+ 		<td>ID</td>
+ 		<td>标题</td>
+ 		<td>栏目名称</td>
+      {eq name="$Think.session.admin_level" value="1"}
+ 		<td>作者</td>
+ 	  {/eq}	
+ 		<td>阅读量</td>
+ 		<td>发布时间</td>
+ 		<td colspan="2">操作</td>
+ 	</tr>
+
+{volist name="artlist" id="art" empty="$empty"}
+
+	        <td> 
+               <input type="checkbox" name="ids" class="ids" value="{$art.id}">
+            </td>
+
+	 		<td>{$art.id}</td>
+	 		<td class="text-left">{$art.title}</td>
+	 		<td>{$art.cate_id|getCateName}</td>
+	 	{eq name="$Think.session.admin_level" value="1"}
+            <td>{$art.user_id|getUserName}</td>
+        {/eq}	    
+            <td>{$art.pv}</td>
+            <td>{$art.create_time}</td>
+
+	 		  <td><a href="{:url('article/artEdit',['id'=>$art.id])}">编辑</a></td>
+       	
+	 		  <td><a href="{:url('article/artDelete',['id'=>$art.id])}" onClick="return confirm('确定要删除:{$art.title}吗？')">删除</a></td>
+         
+	 	</tr>
+
+	  <!-- <script >
+	  	  function dete(){
+	  	  	  if(confirm("您真的要删除:{$art.title}吗？")==true){
+	  	  	  	 window.location.href="{:url('article/artDelete',['id'=>$art.id])}";
+	  	  	  }
+	  	  } 
+	  </script> -->
+ {/volist}
+ </table>
+
+  <div class="text-center">{$artlist|raw}</div>
+  

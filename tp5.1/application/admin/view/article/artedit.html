@@ -1,0 +1,59 @@
+
+{layout name="public/layout"/}
+<h3 class="text-center text-success">文章编辑</h3>
+
+
+<form action="{:url('article/artUpdate')}" method="post" id="login" enctype="multipart/form-data">
+
+               <input type="hidden" name="id" value="{$artInfo.id}">
+
+              <div class="form-group">
+			    <label for="title" class="col-sm-2 control-label">标题</label>
+			    <div class="col-sm-10">
+			      <input type="text" name="title" value="{$artInfo.title}" class="form-control" id="inputEmail2">
+			    </div>
+			  </div>
+
+			  <div class="form-group">
+			    <label for="cate_id" class="col-sm-2 control-label">分类</label>
+			     <div class="col-sm-10">
+			      <select  name="cate_id" class="form-control">
+			      	{volist name='catelist' id='vol'}
+			      	 <option value="{$vol.id}">{$vol.name}
+			      	 </option>
+			      	{/volist}
+			      </select>
+			    </div>
+			  </div>
+
+			  <div class="form-group">
+			    <label for="content" class="col-sm-2 control-label">文章内容</label>
+			    <div class="col-sm-10">
+			      <textarea class="form-control" name="content" id="content" value="" style="min-height: 230px">{$artInfo.content}</textarea>
+			    </div>
+			  </div>
+
+			  <img src="/uploads/{$artInfo.title_img}" class="img_rounded" width="50">
+
+             <div class="form-group">
+			    <label for="title_img" class="col-sm-2 control-label">标题图片</label>
+			    <div class="col-sm-10">
+			      <input type="file" name="title_img" value="{$artInfo.title_img}" class="form-control" id="title_img" placeholder="标题图片">
+			    </div>
+			  </div>
+
+			  <div class="form-group">
+			    <div class="col-sm-offset-2 col-sm-10">
+			      <button type='submit' class="btn btn-primary" id="submit">保存</button>
+			    </div>
+			  </div>
+			</form>
+
+	   <script type="text/javascript">
+
+		 bkLib.onDomLoaded(function() {
+	    
+	     new nicEditor({iconsPath : '/static/js/nicEditorIcons.gif'}).panelInstance('content');
+         });
+ 
+	   </script>

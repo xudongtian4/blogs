@@ -1,0 +1,50 @@
+{layout name="public/layout"/}
+ <h3 class="text-center text-success">用户列表</h3>
+ <table class="table table-default table-hover text-center">
+ 	
+ 	<tr>
+ 		<td>ID</td>
+ 		<td>名称</td>
+ 		<td>邮箱</td>
+ 		<td>手机号</td>
+ 		<td>注册时间</td>
+ 		<td>身份</td>
+ 		<td>状态</td>
+ 		<td colspan="2">操作</td>
+ 	</tr>
+
+	{volist name="userlist" id="user" empty="$empty"}
+	    <tr>
+	 		<td>{$user.id}</td>
+	 		<td>{$user.name}</td>
+	 		<td>{$user.email}</td>
+	 		<td>{$user.mobile}</td>
+	 		<td>{$user.create_time}</td>
+
+          {if $user.is_admin==1}
+	 		<td style="color: red">超级管理员</td>
+	 	  {else/}
+	 	    <td style="color: blue">普通会员</td>
+          {/if}
+
+          {if $user.status==1}
+	 		<td>启用</td>
+	 	  {else/}	
+	 	   <td>停用</td>
+	 	  {/if}	
+
+            <!-- 只有自己才可以编辑 -->
+            {eq name="$user.id" value="$Think.session.admin_id"}
+	 		  <td><a href="{:url('user/userEdit',['id'=>$user.id])}">编辑</a></td>
+            {/eq}
+
+	 		<!-- 不是自己才可以删除 -->
+	 		{neq name="$user.id" value="$Think.session.admin_id"}
+	 		  <td><a href="{:url('user/userDelete',['id'=>$user.id])}" onClick="return confirm('确认要删除用户:{$user.name}吗？')">删除</a></td>
+            {/neq}
+	 	</tr>
+	 {/volist}
+
+ </table> 
+
+ <div class="text-center">{$userlist|raw}</div>

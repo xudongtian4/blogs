@@ -1,0 +1,19 @@
+ <div id="comments" >
+            <h3>评论列表({$count})</h3>
+ </div>
+ {volist name="commentlist" id="list" empty="$empty"}
+      <div>
+      <p>{$list.user_id|getUserName}&nbsp;&nbsp;&nbsp;发表于&nbsp;&nbsp;&nbsp;&nbsp;{$list.create_time}</p>
+
+      <div>{$list.content}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <a href="javascript:void(0);" class="reply_btn" >回复{$i}ta</a>&nbsp;&nbsp;&nbsp;&nbsp; 
+      {eq name="$Think.session.user_id" value="$list.user_id" }
+        <a href="javascript:deleteComment({$list.id})" >删除{$list.id}</a>
+      {/eq}  
+       <p id="dele" style="color: red"></p>
+
+       </div>
+            <div id="reply"></div>
+       </div>
+          <hr>
+ {/volist} ;

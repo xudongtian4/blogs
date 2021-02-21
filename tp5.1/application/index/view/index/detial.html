@@ -1,0 +1,257 @@
+{extend name='public/base'/}
+
+{block name='body'}
+
+<div class="row">
+     <div class="col-md-8">
+        <div class="page-header">
+        	<h2>{$art.cate_id|getCateName}</h2>
+        </div>
+            <div class="text-center">
+      			 	<h3>{$art->title}</h3>
+
+      			 	<p>
+                发布者:{$art.user_id|getUserName}&nbsp;&nbsp;&nbsp;&nbsp;发布时间：{$art.create_time}&nbsp;&nbsp;&nbsp;&nbsp;
+                阅读量：{$art.pv}&nbsp;&nbsp;&nbsp;&nbsp;
+              </p> 
+             
+             <div id = "content1"  hidden="hidden">
+                  {$art.content}
+              </div>
+
+            <div id = "content2">
+                
+              </div>
+                  <script type="text/javascript">
+                  $(function() {
+                  $("#content2").html($("#content1").text()); 
+                  });
+                  </script>
+              </div>
+
+              <hr>
+              
+              <div align="center">
+              <button  class="btn btn-primary " type="button" id="fav" user_id="{$art.user_id}" art_id="{$art.id}"  session_id={$Think.session.user_id}
+              >收藏</button>
+               <button class="btn btn-warning" type="button" id="ok" user_id="{$art.user_id}" art_id="{$art.id}"  session_id={$Think.session.user_id}
+              >点赞</button>
+              </div>
+
+              {//添加表单评论功能}
+
+               <form class="form-horizontal" id="comment">
+                 <input type="hidden" name="art_id" value="{$art.id}">
+                <input type="hidden" name="user_id" value="{$Think.session.user_id}"> 
+                 <textarea id="content" name="content" cols="40" rows="3" placeholder="请发表您的神评" ></textarea>
+                 <button type="button" class="btn btn-info"  id="submit">提交</button>
+               </form>
+              
+               <!-- <p id="res"></p> -->
+
+          
+
+      <div id="com" art_id="{$art.id}">
+      </div>
+
+
+         <script type="text/javascript">
+
+                /*var haha=function(){
+                    $(".reply").next().empty();
+                    $(".reply").after("<textarea  name='reply' ></textarea>"+"<button  id='hahah'>"+'提交'+"</button>");
+                }*/
+
+            $(function(){
+                  
+                  getcomment();
+
+                $('#submit').on('click',function(){
+                  var content=$('#content').val();
+                  if(content==''){
+                  alert("评论为空！无法提交！");
+                  return false;}
+                      $.ajax({
+                          type: "get",
+                          url : "{:url('index/commentInsert')}",
+                          data: $("#comment").serialize(),
+                    dateType  : "json",
+                      success : function(data){
+                        
+                          switch(data.status){
+
+                           case  0:
+                                    $('#res').text(data.message).fadeOut(2000);
+                                    break;
+                            case 1:
+                                    // $('#res').text(data.message).fadeOut(1000);
+                                    getcomment();
+                                    break;
+                           case -1:
+                                    alert(data.message);
+                                    window.location.href="{:url('index/user/login')}"
+                                    break;
+                           }  
+                        }
+                     })
+                 })
+             })
+                 
+             function getcomment(){
+                  var art_id=$('#com').attr('art_id');
+                      $.ajax({
+                            type: "post",
+                        dataType: "json",
+                            data: {art_id:art_id},
+                             url: "{:url('index/getComment')}",
+                         success: function(data){
+
+                                  $('#com').empty();
+                                  $('#com').html(data);
+                         }
+                    });
+                  }
+            
+/*                 function reply(id){ 
+                     
+                     $.ajax({
+                            type: "post",
+                        dataType: "json",
+                            data: {},
+                             url: "{:url('index/reply')}",
+                         success: function(data){
+                                $("#id").html(data);   
+                         }
+                    });
+              }*/
+                $(".reply_btn").bind('click',function(){
+               /* $(".reply_textarea").remove();
+                $(this).parent().append("<div class='reply_textarea'><textarea name='' cols='40' rows='5'></textarea><br/><input type='submit' value='发表' /></div>");*/
+                alert('haha');
+            });
+
+              function deleteComment(id){
+                 
+                     $.ajax({
+                            type: "post",
+                        dataType: "json",
+                            data: {id:id},
+                             url: "{:url('index/delete')}",
+                        success : function(data){
+                               if (data.status==1) {
+                                  $('#dele').text(data.message).fadeOut(7000);
+                                   getcomment();
+                               }else{
+                                  $('#dele').text(data.message).fadeOut(7000);
+                                    getcomment();
+                                }
+                           }
+                        })
+               }
+
+        </script>
+                
+              <script type="text/javascript">
+                $(function(){
+                   $('#fav').on('click',function(){
+                    //获取当前用户id和文章的id
+                    var  userId=$(this).attr('user_id')
+                    var  artId=$(this).attr('art_id')
+                    var  sessionId=$(this).attr('session_id')
+                    if(userId && artId){
+                       $.ajax({
+                         type : 'get',
+                         url  : "{:url('index/fav')}",
+                         data :  {
+                                  user_id:userId,
+                                  art_id :artId ,
+                              session_id :sessionId,
+                                  time   :new Date().getTime()
+                                  },
+                     dateType : 'json',
+                     success  : function(data){
+
+                       switch(data.status){
+                              case -2:
+                                        alert(data.message);
+                                        window.location.href="{:url('index/user/login')}";
+                                        break;
+
+                             case -1:
+                                        alert(data.message);
+                                        break;
+                             case  0:    
+                                       // alert(data.message);
+                                       // break;
+                                       $('#fav').attr('class','btn btn-default');
+                                       $('#fav').text(data.message);
+                                       break;
+                             case  1:    
+                                       // alert(data.message);
+                                       // break;  
+                                       $('#fav').attr('class','btn btn-success');
+                                       $('#fav').text(data.message);
+                                       break;       
+                                }
+                            }
+                       })
+                     }
+                  })
+                })
+
+              </script>
+
+              <script type="text/javascript">
+                $(function(){
+                   $('#ok').on('click',function(){
+                    //获取当前用户id和文章的id
+                    var  userId=$(this).attr('user_id')
+                    var  artId=$(this).attr('art_id')
+                    var  sessionId=$(this).attr('session_id')
+                    if(userId && artId){
+                       $.ajax({
+                         type : 'get',
+                         url  : "{:url('index/ok')}",
+                         data :  {
+                                  user_id:userId,
+                                  art_id :artId ,
+                              session_id :sessionId,
+                                  time   :new Date().getTime()
+                                 },
+                     dateType : 'json',
+                     success  : function(data){
+
+                       switch(data.status){
+                              case -2:
+                                        alert(data.message);
+                                        window.location.href="{:url('index/user/login')}";
+                                        break;
+
+                             case -1:
+                                        alert(data.message);
+                                        break;
+                             case  0:    
+                                       // alert(data.message);
+                                       // break;
+                                       $('#ok').attr('class','btn btn-default');
+                                       $('#ok').text(data.message);
+                                       break;
+                             case  1:    
+                                       // alert(data.message);
+                                       // break;  
+                                       $('#ok').attr('class','btn btn-success');
+                                       $('#ok').text(data.message);
+                                       break;       
+                            }
+                          }
+                       })
+                    }
+                  })
+                })
+
+              </script>
+     </div>
+
+
+    
+{/block}

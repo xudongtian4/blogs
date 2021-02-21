@@ -1,0 +1,45 @@
+
+   <!--    {include file='public:header'/} 
+      {include file='public:nav'/} -->
+  {extend name='public/base'/}
+
+  {block name="body"}
+	 <div class="row">
+	    <div class="col-md-8">
+	      <div class="page-header">
+	        <h2>{$cateName}</h2>
+	      </div>
+
+	      <!-- 帖子内容 -->
+	  {volist name='article' id="art" empty='$empty'}
+          <div>
+			  <img src="/uploads/{$art.title_img}" class="img-rounded" style='margin-right:40px;float: left;width: 100px;height: 85px'>
+
+			  <div style="float:left;width: 80%">
+			 	<h4><a href="{:url('index/detial',['art_id'=>$art.id])}">{$art.title}</a></h4>
+
+			 	<p>
+			 		发布者:{$art.user_id|getUserName}&nbsp;&nbsp;&nbsp;&nbsp;发布时间：{$art.create_time}&nbsp;&nbsp;&nbsp;&nbsp;
+                    阅读量：{$art.pv}
+			 	</p> 
+
+			 	<div><a href="{:url('index/detial',['art_id'=>$art.id])}">{$art.content|getArtContent}</a></div>
+
+			 	<hr>
+			 </div>
+
+		</div>
+        {/volist}
+       
+      <div class="text-center"> 
+        {$article|raw}
+      </div>
+
+	   </div>
+  
+ {/block}
+<!-- 
+	   {include file='public:right' /}
+	   {include file='public:footer'/} -->
+
+  
