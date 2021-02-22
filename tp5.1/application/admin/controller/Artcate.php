@@ -122,17 +122,5 @@ class Artcate extends Base
 		   }
 	}
 
-	//实现批量删除
-	public function delete(){
-          /*$id=Request::param('id');
-          halt($id);*/
-
-          $data = $_POST['checkID'];
-          
-          $DB = new Db;
-          $res=$DB::table("goods")->delete($data);
-          if($res){
-            echo"ok";
-          }
-	} 
+	
 }
